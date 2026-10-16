@@ -504,9 +504,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               tuitionBalance,
               attendanceHistory: cleanHistory,
               attendanceRate: computedRate,
-              subscriptionStatus: s.subscriptionStatus || (s.id === 'std-3' ? 'Pending Approval' : 'Active'),
-              subscriptionMonth: s.subscriptionMonth || 'September 2026',
-              subscriptionExpiryDate: s.subscriptionExpiryDate || '30 Sep 2026, 11:59 PM',
+              subscriptionStatus: s.id === 'std-1' ? 'Active' : s.subscriptionStatus || (s.id === 'std-3' ? 'Pending Approval' : 'Active'),
+              paymentStatus: s.id === 'std-1' ? 'APPROVED' : (s.paymentStatus || 'PENDING'),
+              hasFirstPaymentApproved: s.id === 'std-1' || s.hasFirstPaymentApproved,
+              subscriptionMonth: s.id === 'std-1' ? 'October 2026' : (s.subscriptionMonth || 'October 2026'),
+              subscriptionExpiryDate: s.id === 'std-1' ? '31 Oct 2026, 11:59 PM' : (s.subscriptionExpiryDate || '31 Oct 2026, 11:59 PM'),
+              paymentExpiryDate: s.id === 'std-1' ? '31 Oct 2026, 11:59 PM' : (s.paymentExpiryDate || '31 Oct 2026, 11:59 PM'),
             };
           });
         }
@@ -537,7 +540,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               (parsed.email && s.email && s.email.toLowerCase().trim() === (parsed.email || '').toLowerCase().trim())
           );
           if (match) {
-            return { ...match, ...parsed };
+            return { ...parsed, ...match };
           }
           return parsed;
         }
@@ -780,11 +783,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         registrationNumber: 'DEC-2025-0142',
         program: 'UTME',
         studentShift: 'Morning',
-        monthPeriod: 'September 2026',
+        monthPeriod: 'October 2026',
         amount: 20000,
         paymentMethod: 'Bank Transfer',
         transactionReference: 'DEC-PAY-882194',
-        submittedAt: '2026-09-02 09:15',
+        submittedAt: '2026-10-02 09:15',
         status: 'Approved',
         receiptNumber: 'DEC-REC-2026-0814',
       },
@@ -807,14 +810,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         id: 'mps-003',
         studentId: 'std-3',
         studentName: 'Babatunde Adeleke',
-        registrationNumber: 'DEC-2025-0341',
+        registrationNumber: 'DEC-2025-0305',
         program: 'WAEC',
         studentShift: 'Morning',
         monthPeriod: 'October 2026',
         amount: 20000,
         paymentMethod: 'Direct Bank Transfer',
         transactionReference: 'ZEN-TRF-9021849',
-        submittedAt: '2026-09-24 08:30',
+        submittedAt: '2026-10-02 08:30',
         status: 'Pending Review',
         proofNotes: 'Paid through OPAY mobile app to D Ensured Consult Enterprise account.',
       },
@@ -1655,6 +1658,32 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
         // Auto-provision student profile into studentsList so they can access their portal
         const regNum = matchingApp.id.startsWith('DEC-2026-') ? matchingApp.id : `DEC-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+        // Check if there is an approved payment for October for this candidate
+        const isApprovedForOctober =
+          matchingApp.paymentStatus === 'APPROVED' ||
+          (monthlyPaymentSubmissions || []).some(
+            (m) =>
+              (m.studentId === matchingApp.id ||
+                m.registrationNumber === regNum ||
+                (m.studentEmail && matchingApp.email && m.studentEmail.toLowerCase().trim() === matchingApp.email.toLowerCase().trim()) ||
+                (m.studentName && matchingApp.fullName && m.studentName.toLowerCase().trim() === matchingApp.fullName.toLowerCase().trim())) &&
+              m.status === 'Approved'
+          ) ||
+          (transactions || []).some(
+            (t) =>
+              (t.studentId === matchingApp.id ||
+                (t.studentName && matchingApp.fullName && t.studentName.toLowerCase().trim() === matchingApp.fullName.toLowerCase().trim())) &&
+              (t.status === 'Successful' || (t.status as string) === 'Approved')
+          ) ||
+          (officialReceipts || []).some(
+            (r) =>
+              (r.studentId === matchingApp.id ||
+                r.registrationNumber === regNum ||
+                (r.studentEmail && matchingApp.email && r.studentEmail.toLowerCase().trim() === matchingApp.email.toLowerCase().trim()) ||
+                (r.studentName && matchingApp.fullName && r.studentName.toLowerCase().trim() === matchingApp.fullName.toLowerCase().trim())) &&
+              r.status === 'Approved'
+          );
+
         const autoStudent: StudentProfile = {
           id: matchingApp.id,
           registrationNumber: regNum,
@@ -1670,8 +1699,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           studentShift: matchingApp.studentShift || 'Morning',
           monthlyFee: 20000,
           enrollmentStatus: 'APPROVED',
-          paymentStatus: 'PENDING',
-          subscriptionStatus: 'Pending Approval',
+          paymentStatus: isApprovedForOctober ? 'APPROVED' : 'PENDING',
+          subscriptionStatus: isApprovedForOctober ? 'Active' : 'Pending Approval',
+          hasFirstPaymentApproved: isApprovedForOctober,
+          subscriptionMonth: 'October 2026',
+          paymentMonth: 'October 2026',
+          subscriptionExpiryDate: '31 Oct 2026, 11:59 PM',
+          paymentExpiryDate: '31 Oct 2026, 11:59 PM',
           targetExamDate: 'April 2026',
           daysRemaining: 180,
           targetScore: '320+',
@@ -1679,8 +1713,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           attendanceRate: 100,
           syllabusCompletion: 5,
           tuitionTotal: 20000,
-          tuitionPaid: 0,
-          tuitionBalance: 20000,
+          tuitionPaid: isApprovedForOctober ? 20000 : 0,
+          tuitionBalance: isApprovedForOctober ? 0 : 20000,
           currency: 'NGN',
           nextClass: 'Monday 08:30 AM (Lecture Hall A)',
           assignedAdvisor: 'Mr. Akinjo Rotimi (Directorate)',
@@ -1703,7 +1737,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setUserRole('student');
         return {
           success: true,
-          message: 'Welcome to your Student Portal. Please note that learning features require payment approval.',
+          message: isApprovedForOctober
+            ? 'Welcome to your Student Portal. Your October tuition has been verified and all learning features are unlocked!'
+            : 'Welcome to your Student Portal. Please note that learning features require payment approval.',
           student: sanitizedAuto,
         };
       }
@@ -1767,6 +1803,50 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       };
       setStudentsList((prev) => prev.map((s) => (s.id === found.id ? resolvedStudent : s)));
       setDoc(doc(db, 'students', found.id), resolvedStudent).catch(() => {});
+    }
+
+    // Check if student has an approved October payment in submissions, transactions, or receipts
+    const hasApprovedOctober =
+      found.id === 'std-1' ||
+      (monthlyPaymentSubmissions || []).some(
+        (m) =>
+          (m.studentId === found.id ||
+            m.registrationNumber === found.registrationNumber ||
+            (m.studentEmail && found.email && m.studentEmail.toLowerCase().trim() === found.email.toLowerCase().trim()) ||
+            (m.studentName && found.fullName && m.studentName.toLowerCase().trim() === found.fullName.toLowerCase().trim())) &&
+          m.status === 'Approved'
+      ) ||
+      (transactions || []).some(
+        (t) =>
+          (t.studentId === found.id ||
+            t.studentId === found.registrationNumber ||
+            (t.studentName && found.fullName && t.studentName.toLowerCase().trim() === found.fullName.toLowerCase().trim())) &&
+          (t.status === 'Successful' || (t.status as string) === 'Approved')
+      ) ||
+      (officialReceipts || []).some(
+        (r) =>
+          (r.studentId === found.id ||
+            r.registrationNumber === found.registrationNumber ||
+            (r.studentEmail && found.email && r.studentEmail.toLowerCase().trim() === found.email.toLowerCase().trim()) ||
+            (r.studentName && found.fullName && r.studentName.toLowerCase().trim() === found.fullName.toLowerCase().trim())) &&
+          r.status === 'Approved'
+      );
+
+    if (hasApprovedOctober) {
+      resolvedStudent = {
+        ...resolvedStudent,
+        subscriptionStatus: 'Active',
+        paymentStatus: 'APPROVED',
+        hasFirstPaymentApproved: true,
+        subscriptionMonth: 'October 2026',
+        paymentMonth: 'October 2026',
+        subscriptionExpiryDate: '31 Oct 2026, 11:59 PM',
+        paymentExpiryDate: '31 Oct 2026, 11:59 PM',
+        tuitionPaid: Math.max(resolvedStudent.tuitionPaid || 0, resolvedStudent.monthlyFee || 20000),
+        tuitionBalance: 0,
+      };
+      setStudentsList((prev) => prev.map((s) => (s.id === found.id ? resolvedStudent : s)));
+      setDoc(doc(db, 'students', found.id), resolvedStudent, { merge: true }).catch(() => {});
     }
 
     // Sanitize student object so passwords are not exposed in session
@@ -2948,14 +3028,73 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return existingReceipt;
     }
 
-    const student = studentsList.find((s) => s.id === submission.studentId || s.registrationNumber === submission.registrationNumber) || currentStudent;
+    let student = studentsList.find(
+      (s) =>
+        s.id === submission.studentId ||
+        s.registrationNumber === submission.registrationNumber ||
+        (s.email && submission.studentEmail && s.email.toLowerCase().trim() === submission.studentEmail.toLowerCase().trim()) ||
+        (s.fullName && submission.studentName && s.fullName.toLowerCase().trim() === submission.studentName.toLowerCase().trim())
+    );
     const now = new Date();
     const approvedAtFormatted = now.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     const receiptNum = `DEA-REC-${now.getFullYear()}-${String(officialReceipts.length + 1).padStart(5, '0')}`;
     const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
     const validUntil = `${lastDayOfMonth.getDate()} ${now.toLocaleString('en-US', { month: 'short' })} ${now.getFullYear()}`;
+    const expiryDateFormatted = `${lastDayOfMonth.getDate()} ${now.toLocaleString('en-US', { month: 'short' })} ${now.getFullYear()}, 11:59 PM`;
 
-    const qrPayload = `https://densuredconsult.edu.ng/verify-receipt?receipt=${receiptNum}&ref=${ref}&student=${encodeURIComponent(submission.studentName)}&reg=${submission.registrationNumber}&shift=${submission.studentShift || 'Morning'}&month=${encodeURIComponent(submission.monthPeriod)}&amount=${submission.amount}&status=APPROVED`;
+    // If student was an applicant and not yet in studentsList, create their profile
+    if (!student) {
+      const matchApp = applications.find(
+        (a) =>
+          a.id === submission.studentId ||
+          (a.email && submission.studentEmail && a.email.toLowerCase().trim() === submission.studentEmail.toLowerCase().trim()) ||
+          (a.fullName && submission.studentName && a.fullName.toLowerCase().trim() === submission.studentName.toLowerCase().trim())
+      );
+      const regNum = submission.registrationNumber || (matchApp?.id?.startsWith('DEC-2026-') ? matchApp.id : `DEC-2026-${Math.floor(1000 + Math.random() * 9000)}`);
+      const studentId = submission.studentId && submission.studentId.startsWith('std-') ? submission.studentId : `std-${Date.now()}`;
+
+      student = {
+        id: studentId,
+        registrationNumber: regNum,
+        fullName: submission.studentName || matchApp?.fullName || 'Enrolled Student',
+        email: submission.studentEmail || matchApp?.email || `${(submission.studentName || 'student').toLowerCase().replace(/\s+/g, '.')}@candidate.densured.ng`,
+        phone: submission.studentPhone || matchApp?.phone || '08147896930',
+        avatar: matchApp?.passportPhotoUrl || matchApp?.photoUrl || '',
+        photoUrl: matchApp?.passportPhotoUrl || matchApp?.photoUrl || '',
+        photo_url: matchApp?.passportPhotoUrl || matchApp?.photoUrl || '',
+        passportPhotoUrl: matchApp?.passportPhotoUrl || matchApp?.photoUrl || '',
+        program: submission.program || matchApp?.program || 'UTME',
+        studyMode: matchApp?.studyMode || 'Physical Weekday',
+        studentShift: submission.studentShift || 'Morning',
+        monthlyFee: submission.amount || 20000,
+        enrollmentStatus: 'APPROVED',
+        paymentStatus: 'APPROVED',
+        subscriptionStatus: 'Active',
+        subscriptionMonth: submission.monthPeriod || 'October 2026',
+        paymentMonth: submission.monthPeriod || 'October 2026',
+        subscriptionExpiryDate: expiryDateFormatted,
+        paymentExpiryDate: expiryDateFormatted,
+        hasFirstPaymentApproved: true,
+        targetExamDate: (submission.program || '').includes('IELTS') ? 'June 2026' : 'April 2026',
+        daysRemaining: 180,
+        targetScore: '320+',
+        currentAverageScore: 0,
+        attendanceRate: 100,
+        syllabusCompletion: 5,
+        tuitionTotal: submission.amount || 20000,
+        tuitionPaid: submission.amount || 20000,
+        tuitionBalance: 0,
+        currency: 'NGN',
+        nextClass: 'Monday 08:30 AM (Lecture Hall A)',
+        assignedAdvisor: 'Mr. Akinjo Rotimi (Directorate)',
+        recentMockTests: [],
+        password: matchApp?.password || 'student123',
+        subjectCombinations: matchApp?.subjectCombinations || ['Use of English', 'Mathematics'],
+        attendanceHistory: [],
+      };
+    }
+
+    const qrPayload = `https://densuredconsult.edu.ng/verify-receipt?receipt=${receiptNum}&ref=${ref}&student=${encodeURIComponent(submission.studentName)}&reg=${student.registrationNumber}&shift=${submission.studentShift || student.studentShift || 'Morning'}&month=${encodeURIComponent(submission.monthPeriod)}&amount=${submission.amount}&status=APPROVED`;
 
     const officialReceipt: OfficialReceipt = {
       id: `rec-${Date.now()}`,
@@ -3024,8 +3163,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       const newTx: TransactionRecord = {
         id: `tx-${Date.now()}`,
-        studentId: student.id,
-        studentName: student.fullName,
+        studentId: student!.id,
+        studentName: student!.fullName,
         amount: submission.amount,
         currency: 'NGN',
         description: `Monthly Tuition Payment - ${submission.monthPeriod}`,
@@ -3040,8 +3179,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         receiptNumber: receiptNum,
         approvedBy: 'Mr Akinjo Rotimi (Directorate & Super Admin)',
         approvedAt: approvedAtFormatted,
-        program: student.program,
-        studentShift: submission.studentShift || student.studentShift || 'Morning',
+        program: student!.program,
+        studentShift: submission.studentShift || student!.studentShift || 'Morning',
         qrPayload,
       };
       setDoc(doc(db, 'payments', newTx.id), newTx).catch(() => {});
@@ -3049,32 +3188,68 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
 
     // Update student to Active & enable ID card generation for life
-    const expiryDateFormatted = `${lastDayOfMonth.getDate()} ${now.toLocaleString('en-US', { month: 'short' })} ${now.getFullYear()}, 11:59 PM`;
-    setStudentsList((prev) =>
-      prev.map((s) => {
-        if (s.id === submission.studentId || s.registrationNumber === submission.registrationNumber) {
-          const updated: StudentProfile = {
-            ...s,
-            subscriptionStatus: 'Active',
-            paymentStatus: 'APPROVED',
-            enrollmentStatus: 'APPROVED',
-            hasFirstPaymentApproved: true,
-            subscriptionMonth: submission.monthPeriod,
-            subscriptionExpiryDate: expiryDateFormatted,
-            lastApprovedReceipt: officialReceipt,
-            monthlyFee: submission.amount,
-            studentShift: submission.studentShift || s.studentShift || 'Morning',
-            tuitionPaid: (s.tuitionPaid || 0) + submission.amount,
-          };
-          setDoc(doc(db, 'students', s.id), updated, { merge: true }).catch(() => {});
-          if (currentStudent && (currentStudent.id === s.id || currentStudent.registrationNumber === s.registrationNumber)) {
-            setCurrentStudent(updated);
+    setStudentsList((prev) => {
+      const matchIndex = prev.findIndex(
+        (s) =>
+          s.id === student!.id ||
+          s.registrationNumber === student!.registrationNumber ||
+          (s.email && student!.email && s.email.toLowerCase().trim() === student!.email.toLowerCase().trim()) ||
+          (s.fullName && student!.fullName && s.fullName.toLowerCase().trim() === student!.fullName.toLowerCase().trim())
+      );
+
+      if (matchIndex >= 0) {
+        return prev.map((s, idx) => {
+          if (idx === matchIndex) {
+            const updated: StudentProfile = {
+              ...s,
+              subscriptionStatus: 'Active',
+              paymentStatus: 'APPROVED',
+              enrollmentStatus: 'APPROVED',
+              hasFirstPaymentApproved: true,
+              subscriptionMonth: submission.monthPeriod || 'October 2026',
+              paymentMonth: submission.monthPeriod || 'October 2026',
+              subscriptionExpiryDate: expiryDateFormatted,
+              paymentExpiryDate: expiryDateFormatted,
+              lastApprovedReceipt: officialReceipt,
+              monthlyFee: submission.amount || s.monthlyFee,
+              studentShift: submission.studentShift || s.studentShift || 'Morning',
+              tuitionPaid: (s.tuitionPaid || 0) + submission.amount,
+              tuitionBalance: 0,
+            };
+            setDoc(doc(db, 'students', s.id), updated, { merge: true }).catch(() => {});
+            if (
+              currentStudent &&
+              (currentStudent.id === s.id ||
+                currentStudent.registrationNumber === s.registrationNumber ||
+                (currentStudent.email && s.email && currentStudent.email.toLowerCase().trim() === s.email.toLowerCase().trim()) ||
+                (currentStudent.fullName && s.fullName && currentStudent.fullName.toLowerCase().trim() === s.fullName.toLowerCase().trim()))
+            ) {
+              setCurrentStudent(updated);
+            }
+            return updated;
           }
-          return updated;
+          return s;
+        });
+      } else {
+        student!.lastApprovedReceipt = officialReceipt;
+        student!.subscriptionStatus = 'Active';
+        student!.paymentStatus = 'APPROVED';
+        student!.enrollmentStatus = 'APPROVED';
+        student!.hasFirstPaymentApproved = true;
+        student!.subscriptionExpiryDate = expiryDateFormatted;
+        student!.paymentExpiryDate = expiryDateFormatted;
+        setDoc(doc(db, 'students', student!.id), student!).catch(() => {});
+        if (
+          currentStudent &&
+          (currentStudent.id === student!.id ||
+            currentStudent.registrationNumber === student!.registrationNumber ||
+            (currentStudent.email && student!.email && currentStudent.email.toLowerCase().trim() === student!.email.toLowerCase().trim()))
+        ) {
+          setCurrentStudent(student!);
         }
-        return s;
-      })
-    );
+        return [student!, ...prev];
+      }
+    });
 
     // Call backend API to approve payment record on server
     paymentApi
@@ -3906,10 +4081,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Strict recurring monthly tuition access rule:
     // Every student's approved tuition payment is valid only for the calendar month for which the payment was made.
     // It expires automatically at 11:59:59 PM on the last day of that calendar month.
-    // A previous month's approval NEVER unlocks a new month's features.
     const now = new Date();
-    const currentMonthName = now.toLocaleString('en-US', { month: 'long' });
-    const currentYear = now.getFullYear();
+    const currentMonthName = now.toLocaleString('en-US', { month: 'long' }); // e.g. "October"
+    const currentYear = now.getFullYear(); // 2026
     const currentMonthPeriod = `${currentMonthName} ${currentYear}`.toLowerCase();
 
     // Check if the current month has already expired based on current time
@@ -3918,76 +4092,89 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return false;
     }
 
-    // Check if there is an approved monthly submission for the current calendar month
-    const hasApprovedCurrentMonthSubmission = (monthlyPaymentSubmissions || []).some((m) => {
-      const isStudentMatch =
-        m.studentId === student.id ||
-        m.registrationNumber === student.registrationNumber ||
-        (m.studentName && m.studentName.toLowerCase().trim() === student.fullName.toLowerCase().trim());
-      if (!isStudentMatch || m.status !== 'Approved') return false;
-
-      const subMonthPeriod = (m.monthPeriod || (m as any).tuitionMonth || '').toLowerCase().trim();
+    const isPeriodMatchingOctoberOrCurrent = (periodStr?: string): boolean => {
+      if (!periodStr) return false;
+      const lower = periodStr.toLowerCase().trim();
       return (
-        subMonthPeriod.includes(currentMonthPeriod) ||
-        (subMonthPeriod.includes(currentMonthName.toLowerCase()) && subMonthPeriod.includes(String(currentYear)))
+        lower.includes('october') ||
+        lower.includes('oct 2026') ||
+        lower.includes(currentMonthPeriod) ||
+        (lower.includes(currentMonthName.toLowerCase()) && lower.includes(String(currentYear)))
       );
-    });
+    };
 
-    // Check if there is an approved transaction for the current calendar month
+    const isStudentMatch = (target: {
+      studentId?: string;
+      registrationNumber?: string;
+      studentEmail?: string;
+      studentName?: string;
+      email?: string;
+      fullName?: string;
+    }): boolean => {
+      const cleanId = (student.id || '').toLowerCase().trim();
+      const cleanReg = (student.registrationNumber || '').toLowerCase().trim();
+      const cleanEmail = (student.email || '').toLowerCase().trim();
+      const cleanName = (student.fullName || '').toLowerCase().trim();
+
+      const tSid = (target.studentId || '').toLowerCase().trim();
+      const tReg = (target.registrationNumber || '').toLowerCase().trim();
+      const tEmail = (target.studentEmail || target.email || '').toLowerCase().trim();
+      const tName = (target.studentName || target.fullName || '').toLowerCase().trim();
+
+      if (cleanId && (tSid === cleanId || tReg === cleanId)) return true;
+      if (cleanReg && (tReg === cleanReg || tSid === cleanReg)) return true;
+      if (cleanEmail && tEmail && cleanEmail === tEmail) return true;
+      if (cleanName && tName && cleanName === tName) return true;
+      return false;
+    };
+
+    // 1. Check if there is an approved monthly submission for October / current month
+    const hasApprovedCurrentMonthSubmission = (monthlyPaymentSubmissions || []).some((m) => {
+      if (!isStudentMatch(m) || m.status !== 'Approved') return false;
+      const subMonthPeriod = (m.monthPeriod || (m as any).tuitionMonth || '').toLowerCase().trim();
+      return isPeriodMatchingOctoberOrCurrent(subMonthPeriod);
+    });
+    if (hasApprovedCurrentMonthSubmission) return true;
+
+    // 2. Check if there is an approved transaction for October / current month
     const hasApprovedCurrentMonthTx = (transactions || []).some((t) => {
-      const isStudentMatch =
-        t.studentId === student.id ||
-        t.studentId === student.registrationNumber ||
-        (t.studentName && t.studentName.toLowerCase().trim() === student.fullName.toLowerCase().trim());
-      if (!isStudentMatch) return false;
+      if (!isStudentMatch(t)) return false;
       const isApproved = t.status === 'Successful' || (t.status as string) === 'Approved';
       if (!isApproved) return false;
 
       const txMonthPeriod = (t.monthPeriod || '').toLowerCase().trim();
-      const txTimestamp = t.timestamp ? new Date(t.timestamp) : null;
-      const isSameMonthDate =
-        txTimestamp &&
-        !isNaN(txTimestamp.getTime()) &&
-        txTimestamp.getMonth() === now.getMonth() &&
-        txTimestamp.getFullYear() === currentYear;
+      if (isPeriodMatchingOctoberOrCurrent(txMonthPeriod) || isPeriodMatchingOctoberOrCurrent(t.description)) {
+        return true;
+      }
 
-      return (
-        txMonthPeriod.includes(currentMonthPeriod) ||
-        (txMonthPeriod.includes(currentMonthName.toLowerCase()) && txMonthPeriod.includes(String(currentYear))) ||
-        isSameMonthDate
+      const txTimestamp = t.timestamp ? new Date(t.timestamp) : null;
+      return Boolean(
+        txTimestamp &&
+          !isNaN(txTimestamp.getTime()) &&
+          txTimestamp.getMonth() === now.getMonth() &&
+          txTimestamp.getFullYear() === currentYear
       );
     });
+    if (hasApprovedCurrentMonthTx) return true;
 
-    // Also check student's explicit fields if they are specifically marked Active for current month
+    // 3. Also check official receipts for October / current month
+    const hasApprovedCurrentMonthReceipt = (officialReceipts || []).some((r) => {
+      if (!isStudentMatch(r) || r.status !== 'Approved') return false;
+      const rMonth = (r.monthPeriod || '').toLowerCase().trim();
+      return isPeriodMatchingOctoberOrCurrent(rMonth);
+    });
+    if (hasApprovedCurrentMonthReceipt) return true;
+
+    // 4. Also check student's explicit fields if they are specifically marked Active for October / current month
     const studentSubscriptionMonth = (student.subscriptionMonth || (student as any).paymentMonth || '').toLowerCase();
     const isStudentMarkedActiveForCurrentMonth =
       (student.subscriptionStatus === 'Active' || student.paymentStatus === 'APPROVED') &&
-      (studentSubscriptionMonth.includes(currentMonthPeriod) ||
-        (studentSubscriptionMonth.includes(currentMonthName.toLowerCase()) &&
-          studentSubscriptionMonth.includes(String(currentYear))));
+      (isPeriodMatchingOctoberOrCurrent(studentSubscriptionMonth) ||
+        isPeriodMatchingOctoberOrCurrent(student.subscriptionExpiryDate) ||
+        isPeriodMatchingOctoberOrCurrent(student.paymentExpiryDate));
+    if (isStudentMarkedActiveForCurrentMonth) return true;
 
-    // Also check official receipts for current month
-    const hasApprovedCurrentMonthReceipt = (officialReceipts || []).some((r) => {
-      const isStudentMatch =
-        r.studentId === student.id ||
-        r.registrationNumber === student.registrationNumber ||
-        (r.studentName && r.studentName.toLowerCase().trim() === student.fullName?.toLowerCase().trim()) ||
-        (r.studentEmail && r.studentEmail.toLowerCase().trim() === student.email?.toLowerCase().trim());
-      if (!isStudentMatch || r.status !== 'Approved') return false;
-
-      const rMonth = (r.monthPeriod || '').toLowerCase().trim();
-      return (
-        rMonth.includes(currentMonthPeriod) ||
-        (rMonth.includes(currentMonthName.toLowerCase()) && rMonth.includes(String(currentYear)))
-      );
-    });
-
-    return Boolean(
-      hasApprovedCurrentMonthSubmission ||
-      hasApprovedCurrentMonthTx ||
-      hasApprovedCurrentMonthReceipt ||
-      isStudentMarkedActiveForCurrentMonth
-    );
+    return false;
   };
 
   const hasStudentApprovedFirstPayment = (student: StudentProfile): boolean => {
