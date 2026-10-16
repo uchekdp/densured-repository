@@ -1,0 +1,6 @@
+{
+  "name": "D Ensured Consult",
+  "description": "Premier educational consultancy and tutorial center in Lagos for UTME, WAEC, NECO, ATSWA, TOEFL, SAT & IELTS preparation, student portal, scheduling, and admissions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

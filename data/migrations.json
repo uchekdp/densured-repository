@@ -1,0 +1,9 @@
+[
+  {
+    "id": "migration_001_data_retention_fields",
+    "name": "Add Data Retention, Archival & Financial Cycle Fields",
+    "appliedAt": "2026-10-09T02:49:45.306Z",
+    "recordsAffected": 16,
+    "description": "Safely adds non-destructive archival and monthly cycle fields to students and payments."
+  }
+]

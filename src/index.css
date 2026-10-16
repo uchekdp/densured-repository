@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #0284c7;
+  --color-brand-deep-blue: #0369a1;
+  --color-brand-navy: #0f172a;
+  --color-brand-orange: #ea580c;
+  --color-brand-yellow: #f59e0b;
+  --color-brand-gold: #fbbf24;
+  --color-brand-white: #ffffff;
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+:root {
+  --brand-blue: #0284c7;
+  --brand-deep-blue: #0369a1;
+  --brand-navy: #0f172a;
+  --brand-orange: #ea580c;
+  --brand-yellow: #f59e0b;
+  --brand-white: #ffffff;
+}
+
+body {
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Custom scrollbars with blue and amber accents */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+::-webkit-scrollbar-thumb {
+  background: #0284c7;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0369a1;
+}
+
+/* Header text moving from left to right - slow, smooth and legible */
+@keyframes moveLeftToRight {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-move-ltr {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: moveLeftToRight 95s linear infinite;
+  will-change: transform;
+}
+
+.animate-move-ltr:hover {
+  animation-play-state: paused;
+}
+
+/* Hero background moving smoothly from left to right */
+@keyframes heroBgMoveLeftToRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+
+.animate-hero-bg-ltr {
+  display: flex;
+  width: 600vw;
+  animation: heroBgMoveLeftToRight 36s linear infinite;
+  will-change: transform;
+}
+
+/* Hero slide transition moving from left to right */
+@keyframes slideFromLeft {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-from-left {
+  animation: slideFromLeft 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 6-second timer bar animation */
+@keyframes heroTimerProgress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-hero-timer {
+  animation: heroTimerProgress 6s linear forwards;
+}
+
+/* 20-second dissolving timer bar animation */
+@keyframes heroTimerProgress20s {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-hero-timer-20s {
+  animation: heroTimerProgress20s 20s linear forwards;
+}
+
+

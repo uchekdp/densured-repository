@@ -1,0 +1,109 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Enrolled student record at D Ensured Consult",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "registrationNumber": { "type": "string", "maxLength": 64 },
+        "fullName": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "program": { "type": "string", "maxLength": 64 },
+        "studentShift": { "type": "string", "maxLength": 32 },
+        "monthlyFee": { "type": "number" },
+        "subscriptionStatus": { "type": "string", "maxLength": 32 },
+        "subscriptionMonth": { "type": "string", "maxLength": 32 },
+        "subscriptionExpiryDate": { "type": "string", "maxLength": 64 },
+        "tuitionPaid": { "type": "number" },
+        "tuitionBalance": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "registrationNumber", "fullName", "email"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Tuition payment or clearance transaction record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "reference": { "type": "string", "maxLength": 128 },
+        "studentId": { "type": "string", "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 128 },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "maxLength": 32 },
+        "paymentMethod": { "type": "string", "maxLength": 64 },
+        "monthPeriod": { "type": "string", "maxLength": 64 },
+        "timestamp": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "reference", "amount", "status"]
+    },
+    "Application": {
+      "title": "Application",
+      "description": "Admission registration application",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "fullName": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "program": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "maxLength": 32 },
+        "submittedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "fullName", "email"]
+    },
+    "Receipt": {
+      "title": "Receipt",
+      "description": "Official tuition payment receipt record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "receiptNumber": { "type": "string", "maxLength": 64 },
+        "transactionReference": { "type": "string", "maxLength": 128 },
+        "studentId": { "type": "string", "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 128 },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "maxLength": 32 },
+        "issuedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "receiptNumber", "studentId", "amount", "status"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Administrative payment decision and audit record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "adminName": { "type": "string", "maxLength": 128 },
+        "action": { "type": "string", "maxLength": 128 },
+        "details": { "type": "string", "maxLength": 512 },
+        "timestamp": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "adminName", "action", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Collection of student academic profiles"
+    },
+    "/payments/{paymentId}": {
+      "schema": "Payment",
+      "description": "Collection of tuition payments and clearance logs"
+    },
+    "/applications/{applicationId}": {
+      "schema": "Application",
+      "description": "Collection of incoming admissions applications"
+    },
+    "/receipts/{receiptId}": {
+      "schema": "Receipt",
+      "description": "Collection of official tuition payment receipts"
+    },
+    "/audit_logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Collection of administrative audit trail logs"
+    }
+  }
+}
