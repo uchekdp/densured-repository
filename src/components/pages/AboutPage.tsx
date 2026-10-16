@@ -11,6 +11,12 @@ import {
   BookOpen,
   Users,
   Flame,
+  Sparkles,
+  Briefcase,
+  Theater,
+  Mic,
+  Heart,
+  Quote,
 } from 'lucide-react';
 
 export const AboutPage: React.FC = () => {
@@ -54,10 +60,6 @@ export const AboutPage: React.FC = () => {
       {/* Hero Header */}
       <section className="bg-gradient-to-b from-sky-50 via-white to-sky-50 py-14 sm:py-20 px-4 sm:px-6 lg:px-8 text-center space-y-4 border-b-2 border-sky-100">
         <div className="max-w-4xl mx-auto space-y-3">
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-100 text-[#0284c7] text-xs font-bold border border-sky-200">
-            <GraduationCap className="w-4 h-4 text-[#0284c7]" />
-            <span>Official 2026/2027 Academic Session • Learn, Emerge and Succeed.</span>
-          </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
             About D Ensured Consult Academy
           </h1>
@@ -90,6 +92,193 @@ export const AboutPage: React.FC = () => {
             with a dedicated 120-seat computer testing laboratory, continuous assessment tracking, and structured morning
             and evening shifts.
           </p>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* ABOUT THE FOUNDER & DIRECTOR OF STUDIES                                   */}
+        {/* ========================================================================= */}
+        <section className="bg-white rounded-3xl p-6 sm:p-10 lg:p-12 border-2 border-slate-200 shadow-sm space-y-8 overflow-hidden relative">
+          {/* Header & title */}
+          <div className="border-b border-slate-100 pb-6 space-y-2">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              About the Founder &amp; Director of Studies
+            </h2>
+            <p className="text-xs sm:text-sm font-semibold text-[#0284c7]">
+              AKINJO ROTIMI GEORGE • M.Sc., B.Ed. English (LASU), NCE Dist.
+            </p>
+          </div>
+
+          {/* Main Grid: Portrait Card + Narrative */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+            {/* Left Column: Portrait, Credentials & Core Pillars */}
+            <div className="lg:col-span-5 space-y-6">
+              {/* Portrait card */}
+              <div className="relative rounded-3xl overflow-hidden border-2 border-slate-200 shadow-lg bg-gradient-to-b from-sky-50 to-slate-100 group">
+                <img
+                  src="/founder.jpg"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      'https://i.ibb.co/XkNjZCry/IMG-20261016-WA0010.jpg';
+                  }}
+                  alt="Akinjo Rotimi George - Founder and Director of Studies, D Ensured Consult Academy"
+                  className="w-full h-auto object-cover max-h-[560px] transition-transform duration-500 group-hover:scale-[1.02]"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-transparent p-6 text-white space-y-1">
+                  <div className="text-[11px] font-bold tracking-widest uppercase text-amber-300">
+                    Founder &amp; Director of Studies
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black tracking-tight">
+                    AKINJO ROTIMI GEORGE
+                  </h3>
+                  <p className="text-xs text-slate-300">
+                    D Ensured Consult Academy • Educational Consultant &amp; Language Coach
+                  </p>
+                </div>
+              </div>
+
+              {/* Academic Highlights Grid */}
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="bg-sky-50/70 border border-sky-200 rounded-2xl p-3.5 space-y-1">
+                  <div className="flex items-center gap-1.5 text-[#0284c7] font-bold">
+                    <GraduationCap className="w-4 h-4 shrink-0" />
+                    <span>M.Sc. &amp; B.Ed.</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-snug">
+                    English Language • Lagos State University (LASU)
+                  </p>
+                </div>
+
+                <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-3.5 space-y-1">
+                  <div className="flex items-center gap-1.5 text-emerald-700 font-bold">
+                    <Award className="w-4 h-4 shrink-0" />
+                    <span>NCE Distinction</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-snug">
+                    Theatre Arts &amp; English • AOCOED
+                  </p>
+                </div>
+
+                <div className="bg-orange-50/70 border border-orange-200 rounded-2xl p-3.5 space-y-1">
+                  <div className="flex items-center gap-1.5 text-[#ea580c] font-bold">
+                    <Award className="w-4 h-4 shrink-0" />
+                    <span>UTME 290</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-snug">
+                    Distinction score achieved on first sitting
+                  </p>
+                </div>
+
+                <div className="bg-purple-50/70 border border-purple-200 rounded-2xl p-3.5 space-y-1">
+                  <div className="flex items-center gap-1.5 text-purple-700 font-bold">
+                    <BookOpen className="w-4 h-4 shrink-0" />
+                    <span>Language Coach</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-snug">
+                    IELTS, TOEFL, Duolingo &amp; ITE
+                  </p>
+                </div>
+              </div>
+
+              {/* Key Roles Badges */}
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-2.5">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  Professional Versatility &amp; Calling
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="px-3 py-1 rounded-full bg-white border border-slate-200 font-semibold text-slate-700 flex items-center gap-1.5 shadow-xs">
+                    <Briefcase className="w-3.5 h-3.5 text-[#0284c7]" />
+                    Educational Consultant
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-white border border-slate-200 font-semibold text-slate-700 flex items-center gap-1.5 shadow-xs">
+                    <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
+                    Language Coach
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-white border border-slate-200 font-semibold text-slate-700 flex items-center gap-1.5 shadow-xs">
+                    <Theater className="w-3.5 h-3.5 text-purple-600" />
+                    Passionate Thespian
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-white border border-slate-200 font-semibold text-slate-700 flex items-center gap-1.5 shadow-xs">
+                    <Mic className="w-3.5 h-3.5 text-orange-600" />
+                    Master of Ceremonies (MC)
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-white border border-slate-200 font-semibold text-slate-700 flex items-center gap-1.5 shadow-xs">
+                    <Heart className="w-3.5 h-3.5 text-rose-500" />
+                    Family Man by Grace
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Detailed Narrative */}
+            <div className="lg:col-span-7 space-y-6 text-slate-700 text-xs sm:text-sm leading-relaxed">
+              {/* Intro Highlight Quote */}
+              <div className="p-5 sm:p-6 bg-gradient-to-r from-sky-50 via-white to-orange-50 border-l-4 border-[#0284c7] rounded-2xl shadow-xs space-y-2">
+                <Quote className="w-6 h-6 text-[#0284c7]/40" />
+                <p className="text-xs sm:text-sm font-semibold text-slate-900 leading-relaxed italic">
+                  &ldquo;AKINJO ROTIMI GEORGE is a distinguished educationist, professional educational consultant, language coach, entrepreneur, event planner, Master of Ceremonies, and passionate thespian whose life reflects a remarkable blend of academic excellence, professional versatility, creativity, and an unwavering commitment to human development.&rdquo;
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <p>
+                  Born on April 19, 1990, Akinjo Rotimi George has consistently demonstrated a strong passion for learning, leadership, communication, and the performing arts. His academic journey is a testament to his determination, intellectual capacity, and commitment to excellence.
+                </p>
+
+                <p>
+                  He completed his Senior Secondary School Certificate Examination (SSCE) in 2010 with outstanding grades. Shortly afterward, he proceeded to sit for the Unified Tertiary Matriculation Examination (UTME), where he achieved an impressive score of <strong>290 at his first sitting</strong>—an accomplishment that marked the beginning of an exceptional academic journey.
+                </p>
+
+                <p>
+                  Driven by his passion for education and the English language, he gained admission into Adeniran Ogunsanya College of Education, where he studied <strong>Theatre Arts and English Language</strong>, graduating with <strong>Distinction</strong> in his NCE programme. His quest for greater academic and professional advancement subsequently led him to <strong>Lagos State University (LASU)</strong>, where he earned a Bachelor of Education (B.Ed.) degree in English Language. In his continued pursuit of academic excellence, he furthered his studies at the same institution, earning a Master of Science (M.Sc.) degree in English Language.
+                </p>
+              </div>
+
+              {/* D Ensured Academy & Coaching Callout */}
+              <div className="p-5 sm:p-6 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+                <h4 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                  <GraduationCap className="w-4 h-4 text-[#ea580c]" />
+                  <span>Founding D Ensured Academy &amp; Educational Consultancy</span>
+                </h4>
+                <p>
+                  Beyond his academic achievements, Akinjo Rotimi George is the founder of <strong>D ENSURED ACADEMY</strong>, an educational institution established to provide quality tutorial services, professional coaching, and educational guidance. Through his work as an educationist and consultant, he is committed to empowering learners, helping individuals achieve their academic ambitions, and providing professional guidance in education and other aspects of life.
+                </p>
+                <p>
+                  He is also a skilled language and communication coach, specialising in speaking and writing preparation for international proficiency examinations, including <strong>IELTS, TOEFL, Duolingo English Test, and ITE</strong>, among others. His passion for language development, effective communication, and student success continues to inspire his approach to coaching and mentorship.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <p>
+                  In addition to his contributions to education, Akinjo is a versatile event planner and accomplished Master of Ceremonies, recognised for his enthusiasm, confidence, stage presence, and ability to create memorable experiences. His background in Theatre Arts has further strengthened his passion for performance, expression, and entertainment. As a committed thespian, he derives immense joy from the performing arts and embraces every opportunity to showcase creativity and talent.
+                </p>
+
+                <p>
+                  At the heart of his professional accomplishments is a deep appreciation for family. He is happily married and blessed with a beautiful daughter, whose presence adds meaning and inspiration to his personal journey.
+                </p>
+
+                <p>
+                  Akinjo Rotimi George embodies the qualities of a lifelong learner, dedicated educator, creative professional, and purposeful entrepreneur. His journey from academic distinction to educational leadership and artistic expression reflects his belief in the power of knowledge, discipline, creativity, and continuous self-development.
+                </p>
+
+                <p>
+                  Through <strong>D ENSURED ACADEMY</strong> and his diverse professional engagements, he continues to pursue a vision of empowering individuals, nurturing potential, promoting academic excellence, and inspiring others to learn, emerge, and succeed.
+                </p>
+              </div>
+
+              {/* Founder's Motto Footer Banner */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-[#1c1152] to-slate-900 text-white flex items-center gap-3.5 shadow-md border border-slate-800">
+                <Sparkles className="w-6 h-6 text-[#FFC600] shrink-0" />
+                <div>
+                  <div className="text-[10px] uppercase font-bold tracking-widest text-[#FFC600]">
+                    The Founder&apos;s Motto
+                  </div>
+                  <p className="text-xs sm:text-sm font-extrabold tracking-tight text-white mt-0.5">
+                    AKINJO ROTIMI GEORGE — An educationist by calling, a consultant by profession, a thespian by passion, and a family man by grace.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* ========================================================================= */}

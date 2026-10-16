@@ -4097,7 +4097,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const lower = periodStr.toLowerCase().trim();
       return (
         lower.includes('october') ||
-        lower.includes('oct 2026') ||
+        lower.includes('oct') ||
+        lower.includes('10/2026') ||
+        lower.includes('2026-10') ||
         lower.includes(currentMonthPeriod) ||
         (lower.includes(currentMonthName.toLowerCase()) && lower.includes(String(currentYear)))
       );
@@ -4130,7 +4132,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // 1. Check if there is an approved monthly submission for October / current month
     const hasApprovedCurrentMonthSubmission = (monthlyPaymentSubmissions || []).some((m) => {
-      if (!isStudentMatch(m) || m.status !== 'Approved') return false;
+      if (!isStudentMatch(m)) return false;
+      const isApproved = m.status === 'Approved' || (m.status as string) === 'APPROVED';
+      if (!isApproved) return false;
       const subMonthPeriod = (m.monthPeriod || (m as any).tuitionMonth || '').toLowerCase().trim();
       return isPeriodMatchingOctoberOrCurrent(subMonthPeriod);
     });
@@ -4139,7 +4143,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // 2. Check if there is an approved transaction for October / current month
     const hasApprovedCurrentMonthTx = (transactions || []).some((t) => {
       if (!isStudentMatch(t)) return false;
-      const isApproved = t.status === 'Successful' || (t.status as string) === 'Approved';
+      const isApproved =
+        t.status === 'Successful' ||
+        (t.status as string) === 'Approved' ||
+        (t.status as string) === 'APPROVED';
       if (!isApproved) return false;
 
       const txMonthPeriod = (t.monthPeriod || '').toLowerCase().trim();
@@ -4159,20 +4166,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // 3. Also check official receipts for October / current month
     const hasApprovedCurrentMonthReceipt = (officialReceipts || []).some((r) => {
-      if (!isStudentMatch(r) || r.status !== 'Approved') return false;
+      if (!isStudentMatch(r)) return false;
+      const isApproved = r.status === 'Approved' || (r.status as string) === 'APPROVED';
+      if (!isApproved) return false;
       const rMonth = (r.monthPeriod || '').toLowerCase().trim();
       return isPeriodMatchingOctoberOrCurrent(rMonth);
     });
     if (hasApprovedCurrentMonthReceipt) return true;
 
-    // 4. Also check student's explicit fields if they are specifically marked Active for October / current month
+    // 4. Check student's explicit fields if they are specifically marked Active / Approved for October
     const studentSubscriptionMonth = (student.subscriptionMonth || (student as any).paymentMonth || '').toLowerCase();
     const isStudentMarkedActiveForCurrentMonth =
-      (student.subscriptionStatus === 'Active' || student.paymentStatus === 'APPROVED') &&
-      (isPeriodMatchingOctoberOrCurrent(studentSubscriptionMonth) ||
+      (student.subscriptionStatus === 'Active' ||
+        student.paymentStatus === 'APPROVED' ||
+        (student.paymentStatus as string) === 'Approved') &&
+      (!studentSubscriptionMonth ||
+        isPeriodMatchingOctoberOrCurrent(studentSubscriptionMonth) ||
         isPeriodMatchingOctoberOrCurrent(student.subscriptionExpiryDate) ||
-        isPeriodMatchingOctoberOrCurrent(student.paymentExpiryDate));
+        isPeriodMatchingOctoberOrCurrent(student.paymentExpiryDate) ||
+        student.hasFirstPaymentApproved);
     if (isStudentMarkedActiveForCurrentMonth) return true;
+
+    // 5. Also check student.hasFirstPaymentApproved
+    if (student.hasFirstPaymentApproved || (student as any).has_first_payment_approved) {
+      return true;
+    }
 
     return false;
   };

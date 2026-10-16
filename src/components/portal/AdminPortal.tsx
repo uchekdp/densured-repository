@@ -2093,7 +2093,10 @@ export const AdminPortal: React.FC = () => {
                               </div>
                               <button
                                 type="button"
-                                onClick={() => approveTuitionPayment(tx.id)}
+                                onClick={() => {
+                                  const rec = approveAnyPayment(tx.id);
+                                  if (rec) openReceiptModal(rec);
+                                }}
                                 className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors cursor-pointer"
                               >
                                 Approve
