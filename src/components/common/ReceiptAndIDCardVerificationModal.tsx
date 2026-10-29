@@ -961,7 +961,7 @@ export const ReceiptAndIDCardVerificationModal: React.FC<ReceiptAndIDCardModalPr
                       Dial this USSD sequence on your registered phone:
                     </span>
                     <div className="font-mono text-lg font-black text-[#0a192f] bg-white p-3 rounded-xl border border-slate-200">
-                      *737*2*₦{gatewayAmount}*8147896930#
+                      *737*2*₦{gatewayAmount}*6111753209#
                     </div>
                   </div>
                 )}

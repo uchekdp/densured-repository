@@ -554,16 +554,16 @@ export const StudentRegistrationPage: React.FC = () => {
             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 text-xs">
               <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                 <span className="font-black text-[#25166B] uppercase text-[11px]">Approved School Bank Account Details</span>
-                <span className="text-[10px] text-slate-500 font-bold">OPAY MFB</span>
+                <span className="text-[10px] text-slate-500 font-bold">OPAY</span>
               </div>
               <div className="grid grid-cols-2 gap-2 pt-1 text-[11px]">
                 <div>
                   <span className="text-slate-400 block text-[10px]">Account Name</span>
-                  <strong className="text-slate-900 font-bold">De Ensured Consult Academy</strong>
+                  <strong className="text-slate-900 font-bold">D ENSURED CONSULT ENTERPRISE</strong>
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[10px]">Account Number</span>
-                  <strong className="text-[#0284c7] font-mono text-sm font-black">8147896930</strong>
+                  <strong className="text-[#0284c7] font-mono text-sm font-black">6111753209</strong>
                 </div>
               </div>
             </div>
@@ -761,15 +761,15 @@ export const StudentRegistrationPage: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
                     <span className="text-slate-400 block text-[10px] uppercase font-bold">Bank Name</span>
-                    <strong className="text-slate-900 text-xs font-extrabold">OPAY Microfinance Bank</strong>
+                    <strong className="text-slate-900 text-xs font-extrabold">OPAY</strong>
                   </div>
                   <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
                     <span className="text-slate-400 block text-[10px] uppercase font-bold">Account Name</span>
-                    <strong className="text-slate-900 text-xs font-extrabold">De Ensured Consult Academy</strong>
+                    <strong className="text-slate-900 text-xs font-extrabold">D ENSURED CONSULT ENTERPRISE</strong>
                   </div>
                   <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
                     <span className="text-slate-400 block text-[10px] uppercase font-bold">Account Number</span>
-                    <strong className="text-[#0284c7] text-sm font-mono font-black">8147896930</strong>
+                    <strong className="text-[#0284c7] text-sm font-mono font-black">6111753209</strong>
                   </div>
                 </div>
               </div>

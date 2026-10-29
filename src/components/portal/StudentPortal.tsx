@@ -3594,21 +3594,21 @@ export const StudentPortal: React.FC = () => {
                   <span className="font-black text-[#25166B] uppercase text-xs">Approved Institutional Bank Account Details</span>
                 </div>
                 <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
-                  OPAY MFB Official Account
+                  OPAY Official Account
                 </span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
                 <div className="bg-white p-3 rounded-xl border border-slate-200">
                   <span className="text-slate-400 block text-[10px] uppercase font-bold">Bank Name</span>
-                  <strong className="text-slate-900 font-bold text-sm">OPAY MFB</strong>
+                  <strong className="text-slate-900 font-bold text-sm">OPAY</strong>
                 </div>
                 <div className="bg-white p-3 rounded-xl border border-slate-200">
                   <span className="text-slate-400 block text-[10px] uppercase font-bold">Account Name</span>
-                  <strong className="text-slate-900 font-bold text-sm">De Ensured Consult Academy</strong>
+                  <strong className="text-slate-900 font-bold text-sm">D ENSURED CONSULT ENTERPRISE</strong>
                 </div>
                 <div className="bg-white p-3 rounded-xl border border-slate-200">
                   <span className="text-slate-400 block text-[10px] uppercase font-bold">Account Number</span>
-                  <strong className="text-[#0284c7] font-mono text-base font-black">8147896930</strong>
+                  <strong className="text-[#0284c7] font-mono text-base font-black">6111753209</strong>
                 </div>
               </div>
               <p className="text-[11px] text-slate-500 leading-relaxed">

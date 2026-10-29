@@ -3913,8 +3913,8 @@ export const AdminPortal: React.FC = () => {
                   const channelsData = [
                     {
                       id: 'opay_mfb',
-                      name: 'OPAY MFB Direct Transfer',
-                      account: 'Account: 8147896930 • De Ensured Consult Academy',
+                      name: 'OPAY Direct Transfer',
+                      account: 'Account: 6111753209 • D ENSURED CONSULT ENTERPRISE',
                       filterFn: (m: string) => {
                         const s = (m || '').toLowerCase();
                         return s.includes('opay') || s.includes('moniepoint') || s.includes('bank transfer') || s.includes('transfer');
